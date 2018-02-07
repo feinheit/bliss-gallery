@@ -85,9 +85,9 @@ export class Gallery {
   }
 
   reveal(index) {
-    this.events.emitEvent('reveal')
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
     this._current = modulo(index, this.slides.length);
+    this.events.emitEvent('reveal', [this._current])
     applyTransform(this.slider, `translate3d(-${this.width * this._current}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
   }
