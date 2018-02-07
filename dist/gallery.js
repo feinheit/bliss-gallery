@@ -13,6 +13,12 @@ exports.applyTransform = applyTransform;
 
 var _swipedetector = require('swipedetector');
 
+var _wolfy87Eventemitter = require('wolfy87-eventemitter');
+
+var _wolfy87Eventemitter2 = _interopRequireDefault(_wolfy87Eventemitter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function modulo(p, q) {
@@ -33,6 +39,8 @@ function applyTransform(element, transform) {
 var Gallery = exports.Gallery = function () {
   function Gallery(element, options) {
     _classCallCheck(this, Gallery);
+
+    this.events = new _wolfy87Eventemitter2.default();
 
     this.element = element;
     this.slider = this.element.querySelector('[data-slider]');
@@ -73,6 +81,7 @@ var Gallery = exports.Gallery = function () {
   }, {
     key: 'reveal',
     value: function reveal(index) {
+      this.events.emitEvent('reveal');
       this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
       this._current = modulo(index, this.slides.length);
       applyTransform(this.slider, 'translate3d(-' + this.width * this._current + 'px, 0, 0)');
