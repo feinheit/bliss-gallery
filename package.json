@@ -19,8 +19,7 @@
   },
   "homepage": "https://github.com/feinheit/bliss-gallery#readme",
   "dependencies": {
-    "swipedetector": "^1.0.0",
-    "wolfy87-eventemitter": "^5.2.4"
+    "swipedetector": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

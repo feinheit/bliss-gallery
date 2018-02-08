@@ -1,5 +1,5 @@
-import {SwipeDetector} from 'swipedetector';
-import EventEmitter from 'wolfy87-eventemitter';
+import {SwipeDetector} from 'swipedetector'
+import Eventer from './eventer'
 
 export function modulo(p, q) {
   // A modulo function which actually returns a value with the sign of the
@@ -21,9 +21,9 @@ export function applyTransform(element, transform) {
   element.style.transform = transform;
 }
 
-export class Gallery {
+export class Gallery extends Eventer {
   constructor(element, options) {
-    this.events = new EventEmitter()
+    super()
 
     this.element = element;
     this.slider = this.element.querySelector('[data-slider]');
@@ -87,7 +87,7 @@ export class Gallery {
   reveal(index) {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
     this._current = modulo(index, this.slides.length);
-    this.events.emitEvent('reveal', [this._current])
+    this.emitEvent('reveal', [this._current])
     applyTransform(this.slider, `translate3d(-${this.width * this._current}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
   }
