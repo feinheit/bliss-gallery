@@ -1,5 +1,5 @@
 import {SwipeDetector} from 'swipedetector'
-import Eventer from './eventer'
+import {EventEmitter} from 'events';
 
 export function modulo(p, q) {
   // A modulo function which actually returns a value with the sign of the
@@ -21,9 +21,9 @@ export function applyTransform(element, transform) {
   element.style.transform = transform;
 }
 
-export class Gallery extends Eventer {
+export class Gallery {
   constructor(element, options) {
-    super()
+    this._eventEmitter = new EventEmitter()
 
     this.element = element;
     this.slider = this.element.querySelector('[data-slider]');
@@ -84,10 +84,14 @@ export class Gallery extends Eventer {
     }
   }
 
+  get emitter() {
+    return this._eventEmitter;
+  }
+
   reveal(index) {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
     this._current = modulo(index, this.slides.length);
-    this.emitEvent('reveal', [this._current])
+    this._eventEmitter.emit('reveal', this._current)
     applyTransform(this.slider, `translate3d(-${this.width * this._current}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
   }
