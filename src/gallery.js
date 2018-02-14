@@ -36,6 +36,7 @@ export class Gallery {
         interval: 5000,
         autoPlay: true,
         createThumbs: true,
+        visibleSlides: 1,
       },
       options
     );
@@ -90,17 +91,24 @@ export class Gallery {
 
   reveal(index) {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
-    this._current = modulo(index, this.slides.length);
+    this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
     this._eventEmitter.emit('reveal', this._current)
-    applyTransform(this.slider, `translate3d(-${this.width * this._current}px, 0, 0)`);
+    applyTransform(this.slider, `translate3d(-${this.width * this._current / this.options.visibleSlides}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
+
+    this.slides.forEach((slide, index) => {
+      if (index < this._current || index >= this._current + this.options.visibleSlides)
+        slide.dataset.slidePosition = -1
+      else
+        slide.dataset.slidePosition = index - this._current
+    })
   }
 
   _setWidthsAndPositions() {
     this.width = parseFloat(getComputedStyle(this.element).getPropertyValue('width'));
     this.slider.style.width = `${this.width * this.slides.length}px`;
     this.slides.forEach(slide => {
-      slide.style.width = `${this.width}px`;
+      slide.style.width = `${this.width / this.options.visibleSlides}px`;
     });
   }
 
