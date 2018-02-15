@@ -5,11 +5,18 @@ Change log
 `Next version`_
 ===============
 
-- Remove the bliss dependency.
+
+`0.4`_ (2018-02-15)
+====================
+
+- Emit event when revealing slides
+- Allow for slides not to stretch to the full width of the container
 
 
 `0.3`_ (2018-01-08)
 ====================
+
+- Remove the bliss dependency.
 
 
 `0.2.2`_ (2017-10-10)
@@ -41,4 +48,5 @@ Change log
 .. _0.2.1: https://github.com/feinheit/bliss-gallery/compare/v0.2.0...v0.2.1
 .. _0.2.2: https://github.com/feinheit/bliss-gallery/compare/v0.2.1...v0.2.2
 .. _0.3: https://github.com/feinheit/bliss-gallery/compare/v0.2.2...v0.3
-.. _Next version: https://github.com/feinheit/bliss-gallery/compare/v0.3...master
+.. _0.4: https://github.com/feinheit/bliss-gallery/compare/v0.3...v0.4
+.. _Next version: https://github.com/feinheit/bliss-gallery/compare/v0.4...master
