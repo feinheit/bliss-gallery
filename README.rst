@@ -9,9 +9,12 @@ Usage::
 
     import {Gallery} from 'bliss-gallery'
 
-    new Gallery(element, {
+    const myGallery = new Gallery(element, {
         interval: 5000,
         autoPlay: true,
         createThumbs: true,
         visibleSlides: 1,
     })
+
+    // how to listen for the reveal event
+    myGallery.emitter.addListener('reveal', slideIndex => console.info('revealed slide ' + slideIndex))
