@@ -1,6 +1,6 @@
 {
   "name": "bliss-gallery",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Simple gallery built using Bliss",
   "main": "dist/gallery.js",
   "scripts": {
