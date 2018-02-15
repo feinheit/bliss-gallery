@@ -83,7 +83,10 @@ var Gallery = exports.Gallery = function () {
       this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
       this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
       this._eventEmitter.emit('reveal', this._current);
-      applyTransform(this.slider, 'translate3d(-' + this.width * this._current / this.options.visibleSlides + 'px, 0, 0)');
+
+      var offset = this.width * this._current / this.options.visibleSlides - this.centeringOffset;
+
+      applyTransform(this.slider, 'translate3d(' + -offset + 'px, 0, 0)');
       this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
 
       this.slides.forEach(function (slide, index) {
@@ -100,6 +103,8 @@ var Gallery = exports.Gallery = function () {
       this.slides.forEach(function (slide) {
         slide.style.width = _this2.width / _this2.options.visibleSlides + 'px';
       });
+
+      this.centeringOffset = 0.5 * this.width * (1 - Math.floor(this.options.visibleSlides) / this.options.visibleSlides);
     }
   }, {
     key: '_setEventListeners',

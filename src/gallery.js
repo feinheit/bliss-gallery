@@ -93,7 +93,10 @@ export class Gallery {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
     this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
     this._eventEmitter.emit('reveal', this._current)
-    applyTransform(this.slider, `translate3d(-${this.width * this._current / this.options.visibleSlides}px, 0, 0)`);
+
+    let offset = (this.width * this._current / this.options.visibleSlides - this.centeringOffset)
+
+    applyTransform(this.slider, `translate3d(${-offset}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
 
     this.slides.forEach((slide, index) => {
@@ -110,6 +113,9 @@ export class Gallery {
     this.slides.forEach(slide => {
       slide.style.width = `${this.width / this.options.visibleSlides}px`;
     });
+
+    this.centeringOffset = 0.5 * this.width * (1 - Math.floor(this.options.visibleSlides) / this.options.visibleSlides)
+
   }
 
   _setEventListeners() {
