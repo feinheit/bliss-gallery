@@ -13,6 +13,8 @@ exports.applyTransform = applyTransform;
 
 var _swipedetector = require('swipedetector');
 
+var _events = require('events');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function modulo(p, q) {
@@ -34,6 +36,8 @@ var Gallery = exports.Gallery = function () {
   function Gallery(element, options) {
     _classCallCheck(this, Gallery);
 
+    this._eventEmitter = new _events.EventEmitter();
+
     this.element = element;
     this.slider = this.element.querySelector('[data-slider]');
     this.slides = Array.from(this.element.querySelectorAll('[data-slide]'));
@@ -43,7 +47,8 @@ var Gallery = exports.Gallery = function () {
     this.options = Object.assign({
       interval: 5000,
       autoPlay: true,
-      createThumbs: true
+      createThumbs: true,
+      visibleSlides: 1
     }, options);
 
     this._current = null;
@@ -73,32 +78,39 @@ var Gallery = exports.Gallery = function () {
   }, {
     key: 'reveal',
     value: function reveal(index) {
+      var _this = this;
+
       this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
-      this._current = modulo(index, this.slides.length);
-      applyTransform(this.slider, 'translate3d(-' + this.width * this._current + 'px, 0, 0)');
+      this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
+      this._eventEmitter.emit('reveal', this._current);
+      applyTransform(this.slider, 'translate3d(-' + this.width * this._current / this.options.visibleSlides + 'px, 0, 0)');
       this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
+
+      this.slides.forEach(function (slide, index) {
+        if (index < _this._current || index >= _this._current + _this.options.visibleSlides) slide.dataset.slidePosition = -1;else slide.dataset.slidePosition = index - _this._current;
+      });
     }
   }, {
     key: '_setWidthsAndPositions',
     value: function _setWidthsAndPositions() {
-      var _this = this;
+      var _this2 = this;
 
       this.width = parseFloat(getComputedStyle(this.element).getPropertyValue('width'));
       this.slider.style.width = this.width * this.slides.length + 'px';
       this.slides.forEach(function (slide) {
-        slide.style.width = _this.width + 'px';
+        slide.style.width = _this2.width / _this2.options.visibleSlides + 'px';
       });
     }
   }, {
     key: '_setEventListeners',
     value: function _setEventListeners() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.thumbs.forEach(function (thumb, index) {
         thumb.addEventListener('click', function (e) {
           e.preventDefault();
-          _this2.autoPlay = false;
-          _this2.reveal(index);
+          _this3.autoPlay = false;
+          _this3.reveal(index);
         });
       });
 
@@ -106,35 +118,35 @@ var Gallery = exports.Gallery = function () {
       Array.from(this.element.querySelectorAll('[data-go]')).forEach(function (el) {
         el.addEventListener('click', function (e) {
           e.preventDefault();
-          _this2.autoPlay = false;
-          _this2.reveal(_this2._current + parseInt(e.currentTarget.dataset.go, 10));
+          _this3.autoPlay = false;
+          _this3.reveal(_this3._current + parseInt(e.currentTarget.dataset.go, 10));
         });
       });
 
       this.playPause && this.playPause.addEventListener('click', function (e) {
         e.preventDefault();
-        _this2.autoPlay = !_this2.autoPlay;
+        _this3.autoPlay = !_this3.autoPlay;
       });
 
       var events = new _swipedetector.SwipeDetector(this.element).emitter;
       events.on('left', function () {
-        _this2.autoPlay = false;
-        _this2.reveal(_this2._current + 1);
+        _this3.autoPlay = false;
+        _this3.reveal(_this3._current + 1);
       });
       events.on('right', function () {
-        _this2.autoPlay = false;
-        _this2.reveal(_this2._current - 1);
+        _this3.autoPlay = false;
+        _this3.reveal(_this3._current - 1);
       });
 
       window.addEventListener('resize', function () {
-        _this2._setWidthsAndPositions();
-        _this2.reveal(_this2._current);
+        _this3._setWidthsAndPositions();
+        _this3.reveal(_this3._current);
       });
     }
   }, {
     key: '_createThumbs',
     value: function _createThumbs() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.thumbsContainer) {
         if (this.slides.length > 1) {
@@ -142,7 +154,7 @@ var Gallery = exports.Gallery = function () {
             var a = document.createElement('a');
             a.setAttribute('href', '');
             a.setAttribute('data-thumb', '');
-            _this3.thumbsContainer.appendChild(a);
+            _this4.thumbsContainer.appendChild(a);
           });
         }
       } else {
@@ -155,13 +167,13 @@ var Gallery = exports.Gallery = function () {
       return this._interval != null;
     },
     set: function set(enable) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (enable) {
         this.element.dataset.playing = true;
         if (!this._interval) {
           this._interval = setInterval(function () {
-            return _this4.reveal(_this4._current + 1);
+            return _this5.reveal(_this5._current + 1);
           }, this.options.interval);
         }
       } else {
@@ -171,6 +183,11 @@ var Gallery = exports.Gallery = function () {
           this._interval = null;
         }
       }
+    }
+  }, {
+    key: 'emitter',
+    get: function get() {
+      return this._eventEmitter;
     }
   }]);
 

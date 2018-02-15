@@ -1,4 +1,5 @@
-import {SwipeDetector} from 'swipedetector';
+import {SwipeDetector} from 'swipedetector'
+import {EventEmitter} from 'events';
 
 export function modulo(p, q) {
   // A modulo function which actually returns a value with the sign of the
@@ -22,6 +23,8 @@ export function applyTransform(element, transform) {
 
 export class Gallery {
   constructor(element, options) {
+    this._eventEmitter = new EventEmitter()
+
     this.element = element;
     this.slider = this.element.querySelector('[data-slider]');
     this.slides = Array.from(this.element.querySelectorAll('[data-slide]'));
@@ -33,6 +36,7 @@ export class Gallery {
         interval: 5000,
         autoPlay: true,
         createThumbs: true,
+        visibleSlides: 1,
       },
       options
     );
@@ -81,18 +85,30 @@ export class Gallery {
     }
   }
 
+  get emitter() {
+    return this._eventEmitter;
+  }
+
   reveal(index) {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
-    this._current = modulo(index, this.slides.length);
-    applyTransform(this.slider, `translate3d(-${this.width * this._current}px, 0, 0)`);
+    this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
+    this._eventEmitter.emit('reveal', this._current)
+    applyTransform(this.slider, `translate3d(-${this.width * this._current / this.options.visibleSlides}px, 0, 0)`);
     this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
+
+    this.slides.forEach((slide, index) => {
+      if (index < this._current || index >= this._current + this.options.visibleSlides)
+        slide.dataset.slidePosition = -1
+      else
+        slide.dataset.slidePosition = index - this._current
+    })
   }
 
   _setWidthsAndPositions() {
     this.width = parseFloat(getComputedStyle(this.element).getPropertyValue('width'));
     this.slider.style.width = `${this.width * this.slides.length}px`;
     this.slides.forEach(slide => {
-      slide.style.width = `${this.width}px`;
+      slide.style.width = `${this.width / this.options.visibleSlides}px`;
     });
   }
 
