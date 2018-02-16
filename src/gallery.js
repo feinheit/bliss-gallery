@@ -91,7 +91,7 @@ export class Gallery {
 
   reveal(index) {
     this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
-    this._current = modulo(index, this.slides.length - parseInt(this.options.visibleSlides));
+    this._current = modulo(index, this.slides.length - Math.floor(this.options.visibleSlides) + 1);
     this._eventEmitter.emit('reveal', this._current)
 
     let offset = (this.width * this._current / this.options.visibleSlides - this.centeringOffset)
