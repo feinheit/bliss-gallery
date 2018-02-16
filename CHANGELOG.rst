@@ -6,6 +6,12 @@ Change log
 ===============
 
 
+`0.4.1`_ (2018-02-16)
+====================
+
+- Bug fix for showing last slide
+
+
 `0.4`_ (2018-02-15)
 ====================
 
@@ -49,4 +55,5 @@ Change log
 .. _0.2.2: https://github.com/feinheit/bliss-gallery/compare/v0.2.1...v0.2.2
 .. _0.3: https://github.com/feinheit/bliss-gallery/compare/v0.2.2...v0.3
 .. _0.4: https://github.com/feinheit/bliss-gallery/compare/v0.3...v0.4
-.. _Next version: https://github.com/feinheit/bliss-gallery/compare/v0.4...master
+.. _0.4.1: https://github.com/feinheit/bliss-gallery/compare/v0.4...v0.4.1
+.. _Next version: https://github.com/feinheit/bliss-gallery/compare/v0.4.1...master
