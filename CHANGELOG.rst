@@ -7,38 +7,38 @@ Change log
 
 
 `0.4.1`_ (2018-02-16)
-====================
+=====================
 
 - Bug fix for showing last slide
 
 
 `0.4`_ (2018-02-15)
-====================
+===================
 
 - Emit event when revealing slides
 - Allow for slides not to stretch to the full width of the container
 
 
 `0.3`_ (2018-01-08)
-====================
+===================
 
 - Remove the bliss dependency.
 
 
 `0.2.2`_ (2017-10-10)
-====================
+=====================
 
 - now using shy bliss to not litter $ in the global workspace
 
 
 `0.2.1`_ (2017-05-12)
-====================
+=====================
 
 - adding ``[data-hide-controls]`` to main element when there are <= 1 slides
 
 
 `0.2`_ (2017-05-12)
-====================
+===================
 
 - Changing ``autoPlay`` to be a property of gallery with ``get`` and ``set``
   therefore braking old versions that use the function way ``autoplay()``
