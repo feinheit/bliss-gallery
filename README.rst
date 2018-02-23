@@ -35,6 +35,7 @@ CSS::
 
     [data-slider] {
         display: flex;
+        transition: transform 0.5s ease-in-out;
     }
 
     [data-slide] {
