@@ -38,7 +38,10 @@ var Gallery = exports.Gallery = function () {
 
     this._eventEmitter = new _events.EventEmitter();
 
+    // element contains all gallery items (slider & controls)
     this.element = element;
+    // sliderContainer only contains slider with slides
+    this.sliderContainer = this.element.querySelector('[data-slider-container]');
     this.slider = this.element.querySelector('[data-slider]');
     this.slides = Array.from(this.element.querySelectorAll('[data-slide]'));
     this.thumbsContainer = this.element.querySelector('[data-thumbs]');
@@ -98,7 +101,7 @@ var Gallery = exports.Gallery = function () {
     value: function _setWidthsAndPositions() {
       var _this2 = this;
 
-      this.width = parseFloat(getComputedStyle(this.element).getPropertyValue('width'));
+      this.width = parseFloat(getComputedStyle(this.sliderContainer || this.element).getPropertyValue('width'));
       this.slider.style.width = this.width * this.slides.length + 'px';
       this.slides.forEach(function (slide) {
         slide.style.width = _this2.width / _this2.options.visibleSlides + 'px';

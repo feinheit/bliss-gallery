@@ -25,7 +25,10 @@ export class Gallery {
   constructor(element, options) {
     this._eventEmitter = new EventEmitter()
 
+    // element contains all gallery items (slider & controls)
     this.element = element;
+    // sliderContainer only contains slider with slides
+    this.sliderContainer = this.element.querySelector('[data-slider-container]');
     this.slider = this.element.querySelector('[data-slider]');
     this.slides = Array.from(this.element.querySelectorAll('[data-slide]'));
     this.thumbsContainer = this.element.querySelector('[data-thumbs]');
@@ -108,7 +111,7 @@ export class Gallery {
   }
 
   _setWidthsAndPositions() {
-    this.width = parseFloat(getComputedStyle(this.element).getPropertyValue('width'));
+    this.width = parseFloat(getComputedStyle(this.sliderContainer || this.element).getPropertyValue('width'));
     this.slider.style.width = `${this.width * this.slides.length}px`;
     this.slides.forEach(slide => {
       slide.style.width = `${this.width / this.options.visibleSlides}px`;

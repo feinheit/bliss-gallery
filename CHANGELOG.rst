@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+- Look for element with [data-slider-container] to use for sizing to allow
+  more flexible styling (controls outside of slides area)
+
 
 `0.4.1`_ (2018-02-16)
 =====================
