@@ -7,6 +7,8 @@ Change log
 
 - Look for element with [data-slider-container] to use for sizing to allow
   more flexible styling (controls outside of slides area)
+- Use imagesLoaded library to wait with initialisation until all images ready
+  (there was an initialisation problem in chrome)
 
 
 `0.4.1`_ (2018-02-16)
