@@ -1,5 +1,6 @@
 import {SwipeDetector} from 'swipedetector'
 import {EventEmitter} from 'events';
+import imagesLoaded from 'imagesloaded';
 
 export function modulo(p, q) {
   // A modulo function which actually returns a value with the sign of the
@@ -47,19 +48,19 @@ export class Gallery {
     this._current = null;
     this._interval = null;
 
-    this._setWidthsAndPositions();
-
     this.element.dataset.hideControls = (this.slides.length <= 1);
 
     this.options.createThumbs && this._createThumbs();
 
     this.thumbs = Array.from(this.element.querySelectorAll('[data-thumb]'));
-
     this._setEventListeners();
 
-    this.reveal(0);
-
-    this.autoPlay = this.options.autoPlay;
+    imagesLoaded(this.slides, {background: true}, () => {
+      this.element.dataset.imagesLoaded = true;
+      this._setWidthsAndPositions();
+      this.reveal(0);
+      this.autoPlay = this.options.autoPlay;
+    })
   }
 
   move(direction) {
@@ -118,7 +119,6 @@ export class Gallery {
     });
 
     this.centeringOffset = 0.5 * this.width * (1 - Math.floor(this.options.visibleSlides) / this.options.visibleSlides)
-
   }
 
   _setEventListeners() {

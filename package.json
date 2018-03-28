@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/feinheit/bliss-gallery#readme",
   "dependencies": {
+    "imagesloaded": "^4.1.4",
     "swipedetector": "^1.0.0"
   },
   "devDependencies": {

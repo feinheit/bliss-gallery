@@ -15,6 +15,12 @@ var _swipedetector = require('swipedetector');
 
 var _events = require('events');
 
+var _imagesloaded = require('imagesloaded');
+
+var _imagesloaded2 = _interopRequireDefault(_imagesloaded);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function modulo(p, q) {
@@ -34,6 +40,8 @@ function applyTransform(element, transform) {
 
 var Gallery = exports.Gallery = function () {
   function Gallery(element, options) {
+    var _this = this;
+
     _classCallCheck(this, Gallery);
 
     this._eventEmitter = new _events.EventEmitter();
@@ -57,19 +65,19 @@ var Gallery = exports.Gallery = function () {
     this._current = null;
     this._interval = null;
 
-    this._setWidthsAndPositions();
-
     this.element.dataset.hideControls = this.slides.length <= 1;
 
     this.options.createThumbs && this._createThumbs();
 
     this.thumbs = Array.from(this.element.querySelectorAll('[data-thumb]'));
-
     this._setEventListeners();
 
-    this.reveal(0);
-
-    this.autoPlay = this.options.autoPlay;
+    (0, _imagesloaded2.default)(this.slides, { background: true }, function () {
+      _this.element.dataset.imagesLoaded = true;
+      _this._setWidthsAndPositions();
+      _this.reveal(0);
+      _this.autoPlay = _this.options.autoPlay;
+    });
   }
 
   _createClass(Gallery, [{
@@ -81,7 +89,7 @@ var Gallery = exports.Gallery = function () {
   }, {
     key: 'reveal',
     value: function reveal(index) {
-      var _this = this;
+      var _this2 = this;
 
       this.thumbs[this._current] && this.thumbs[this._current].removeAttribute('data-current');
       this._current = modulo(index, this.slides.length - Math.floor(this.options.visibleSlides) + 1);
@@ -93,18 +101,18 @@ var Gallery = exports.Gallery = function () {
       this.thumbs[this._current] && this.thumbs[this._current].setAttribute('data-current', '');
 
       this.slides.forEach(function (slide, index) {
-        if (index < _this._current || index >= _this._current + _this.options.visibleSlides) slide.dataset.slidePosition = -1;else slide.dataset.slidePosition = index - _this._current;
+        if (index < _this2._current || index >= _this2._current + _this2.options.visibleSlides) slide.dataset.slidePosition = -1;else slide.dataset.slidePosition = index - _this2._current;
       });
     }
   }, {
     key: '_setWidthsAndPositions',
     value: function _setWidthsAndPositions() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.width = parseFloat(getComputedStyle(this.sliderContainer || this.element).getPropertyValue('width'));
       this.slider.style.width = this.width * this.slides.length + 'px';
       this.slides.forEach(function (slide) {
-        slide.style.width = _this2.width / _this2.options.visibleSlides + 'px';
+        slide.style.width = _this3.width / _this3.options.visibleSlides + 'px';
       });
 
       this.centeringOffset = 0.5 * this.width * (1 - Math.floor(this.options.visibleSlides) / this.options.visibleSlides);
@@ -112,13 +120,13 @@ var Gallery = exports.Gallery = function () {
   }, {
     key: '_setEventListeners',
     value: function _setEventListeners() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.thumbs.forEach(function (thumb, index) {
         thumb.addEventListener('click', function (e) {
           e.preventDefault();
-          _this3.autoPlay = false;
-          _this3.reveal(index);
+          _this4.autoPlay = false;
+          _this4.reveal(index);
         });
       });
 
@@ -126,35 +134,35 @@ var Gallery = exports.Gallery = function () {
       Array.from(this.element.querySelectorAll('[data-go]')).forEach(function (el) {
         el.addEventListener('click', function (e) {
           e.preventDefault();
-          _this3.autoPlay = false;
-          _this3.reveal(_this3._current + parseInt(e.currentTarget.dataset.go, 10));
+          _this4.autoPlay = false;
+          _this4.reveal(_this4._current + parseInt(e.currentTarget.dataset.go, 10));
         });
       });
 
       this.playPause && this.playPause.addEventListener('click', function (e) {
         e.preventDefault();
-        _this3.autoPlay = !_this3.autoPlay;
+        _this4.autoPlay = !_this4.autoPlay;
       });
 
       var events = new _swipedetector.SwipeDetector(this.element).emitter;
       events.on('left', function () {
-        _this3.autoPlay = false;
-        _this3.reveal(_this3._current + 1);
+        _this4.autoPlay = false;
+        _this4.reveal(_this4._current + 1);
       });
       events.on('right', function () {
-        _this3.autoPlay = false;
-        _this3.reveal(_this3._current - 1);
+        _this4.autoPlay = false;
+        _this4.reveal(_this4._current - 1);
       });
 
       window.addEventListener('resize', function () {
-        _this3._setWidthsAndPositions();
-        _this3.reveal(_this3._current);
+        _this4._setWidthsAndPositions();
+        _this4.reveal(_this4._current);
       });
     }
   }, {
     key: '_createThumbs',
     value: function _createThumbs() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.thumbsContainer) {
         if (this.slides.length > 1) {
@@ -162,7 +170,7 @@ var Gallery = exports.Gallery = function () {
             var a = document.createElement('a');
             a.setAttribute('href', '');
             a.setAttribute('data-thumb', '');
-            _this4.thumbsContainer.appendChild(a);
+            _this5.thumbsContainer.appendChild(a);
           });
         }
       } else {
@@ -175,13 +183,13 @@ var Gallery = exports.Gallery = function () {
       return this._interval != null;
     },
     set: function set(enable) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (enable) {
         this.element.dataset.playing = true;
         if (!this._interval) {
           this._interval = setInterval(function () {
-            return _this5.reveal(_this5._current + 1);
+            return _this6.reveal(_this6._current + 1);
           }, this.options.interval);
         }
       } else {
