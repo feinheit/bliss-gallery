@@ -7,7 +7,9 @@ Once upon a time built using Bliss, hence the name. Bliss is not used anymore th
 Example Usage
 -------------
 
-HTML::
+HTML:
+
+.. code-block:: html
 
     <div class="my-cool-slideshow">
         <div data-slider-container>
@@ -27,7 +29,9 @@ HTML::
         <div class="slideshow__thumbs" data-thumbs></div>
     </div>
 
-CSS::
+CSS:
+
+.. code-block:: css
 
     [data-slider-container] {
         overflow: hidden;
@@ -42,7 +46,9 @@ CSS::
         flex-shrink: 0;
     }
 
-JS::
+JS:
+
+.. code-block:: js
 
     import {Gallery} from 'bliss-gallery'
 
